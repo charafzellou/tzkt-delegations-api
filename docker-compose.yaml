@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_PORT:-changeme}:${POSTGRES_PORT:-changeme}
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE:-changeme}
+      - POSTGRES_USER=${POSTGRES_USERNAME:-changeme}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "POSTGRES_isready --dbname=tzktdelegator --username=appuser"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:7.4
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    ports:
+      - ${PGA_PORT:-changeme}:${PGA_PORT:-changeme}
+    volumes:
+      - ./volumes/pgadmin4:/volumes/pgadmin4
+    environment:
+      - PGADMIN_LISTEN_PORT=${PGA_PORT:-changeme}
+      - PGADMIN_DEFAULT_EMAIL=${PGA_USERNAME:-changeme}
+      - PGADMIN_DEFAULT_PASSWORD=${PGA_PASSWORD:-changeme}
+      - PGADMIN_SERVER_JSON_FILE=/volumes/pgadmin4/servers.json
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-changeme}
+      - POSTGRES_PORT=${POSTGRES_PORT:-changeme}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE:-changeme}
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME:-changeme}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
+
+#   hasura:
+#     image: hasura/graphql-engine:v2.28.1
+#     depends_on:
+#       - postgres
+#     restart: always
+#     ports:
+#       - ${HSR_PORT:-changeme}:${HSR_PORT:-changeme}
+#     environment:
+#       - HASURA_GRAPHQL_DATABASE_URL=postgres://${POSTGRES_USERNAME:-changeme}:${POSTGRES_PASSWORD:-changeme}@postgres:${POSTGRES_PORT:-changeme}/${POSTGRES_DATABASE:-changeme}
+#       - HASURA_GRAPHQL_ADMIN_SECRET=${HSR_GRAPHQL_ADMIN_SECRET:-changeme}
+#       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+#       - HASURA_GRAPHQL_DEV_MODE=false
+#       - HASURA_GRAPHQL_ENABLED_LOG_TYPES=startup, http-log, webhook-log, websocket-log, query-log
+#       - HASURA_GRAPHQL_ENABLE_TELEMETRY=false

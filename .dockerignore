@@ -1,0 +1,8 @@
+.devcontainer/
+.github/
+.vscode/
+build/
+testdata/
+tmp/
+.env.dist
+*.log
