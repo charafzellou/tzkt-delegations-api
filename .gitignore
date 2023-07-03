@@ -2,4 +2,5 @@ tmp/
 testdata/
 build/
 .env
+*.pdf
 *.log

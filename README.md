@@ -1,8 +1,10 @@
-# KILN - Mid Backend Exercice
+# TZKT DELEGATIONS API
 
 ## Original assignement :
 
-In this exercise, you will build a service that gathers new [delegations](https://opentezos.com/baking/delegating/) made on the Tezos protocol and exposes them through a public API.
+Build a service that :
+- gathers new [delegations](https://opentezos.com/baking/delegating/) made on the Tezos protocol,
+- exposes them through a public API. 
 
 The original assignement document can be viewed [here](./docs/ASSIGNEMENT.md).
 

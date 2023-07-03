@@ -5,14 +5,14 @@ services:
     ports:
       - ${POSTGRES_PORT:-changeme}:${POSTGRES_PORT:-changeme}
     environment:
-      - POSTGRES_DB=${POSTGRES_DATABASE:-changeme}
+      - POSTGRES_DB=${POSTGRES_DB:-changeme}
       - POSTGRES_USER=${POSTGRES_USERNAME:-changeme}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "POSTGRES_isready --dbname=tzktdelegator --username=appuser"
+          "POSTGRES_isready --dbname=tzktdelegations --username=appuser"
         ]
       interval: 30s
       timeout: 5s
@@ -26,24 +26,46 @@ services:
     ports:
       - ${PGA_PORT:-changeme}:${PGA_PORT:-changeme}
     volumes:
-      - ./volumes/pgadmin4:/volumes/pgadmin4
+      - ./volumes/pgadmin4/:/volumes/pgadmin4/
     environment:
       - PGADMIN_LISTEN_PORT=${PGA_PORT:-changeme}
       - PGADMIN_DEFAULT_EMAIL=${PGA_USERNAME:-changeme}
       - PGADMIN_DEFAULT_PASSWORD=${PGA_PASSWORD:-changeme}
       - PGADMIN_SERVER_JSON_FILE=/volumes/pgadmin4/servers.json
 
-  app:
+  indexer:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.indexer
     depends_on:
       - postgres
-    restart: unless-stopped
+    restart: no
+    volumes:
+        - ./app/indexer/logs/:/app/indexer/logs/
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST:-changeme}
       - POSTGRES_PORT=${POSTGRES_PORT:-changeme}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE:-changeme}
+      - POSTGRES_DB=${POSTGRES_DB:-changeme}
+      - POSTGRES_USERNAME=${POSTGRES_USERNAME:-changeme}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - postgres
+      - indexer
+    ports:
+      - ${API_PORT:-changeme}:${API_PORT:-changeme}
+    restart: always
+    volumes:
+      - ./app/api/logs/:/app/api/logs/
+    environment:
+      - API_PORT=${API_PORT:-changeme}
+      - POSTGRES_HOST=${POSTGRES_HOST:-changeme}
+      - POSTGRES_PORT=${POSTGRES_PORT:-changeme}
+      - POSTGRES_DB=${POSTGRES_DB:-changeme}
       - POSTGRES_USERNAME=${POSTGRES_USERNAME:-changeme}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-changeme}
 
@@ -55,7 +77,7 @@ services:
 #     ports:
 #       - ${HSR_PORT:-changeme}:${HSR_PORT:-changeme}
 #     environment:
-#       - HASURA_GRAPHQL_DATABASE_URL=postgres://${POSTGRES_USERNAME:-changeme}:${POSTGRES_PASSWORD:-changeme}@postgres:${POSTGRES_PORT:-changeme}/${POSTGRES_DATABASE:-changeme}
+#       - HASURA_GRAPHQL_DATABASE_URL=postgres://${POSTGRES_USERNAME:-changeme}:${POSTGRES_PASSWORD:-changeme}@postgres:${POSTGRES_PORT:-changeme}/${POSTGRES_DB:-changeme}
 #       - HASURA_GRAPHQL_ADMIN_SECRET=${HSR_GRAPHQL_ADMIN_SECRET:-changeme}
 #       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
 #       - HASURA_GRAPHQL_DEV_MODE=false
