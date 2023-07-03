@@ -1,12 +1,12 @@
 {
     "Servers": {
         "1": {
-            "Name": "tzktdelegator",
+            "Name": "tzktdelegations",
             "Group": "Servers",
             "Host": "postgres",
             "Port": 5432,
             "MaintenanceDB": "postgres",
-            "Username": "postgres",
+            "Username": "appuser",
             "UseSSHTunnel": 0,
             "TunnelPort": "22",
             "TunnelAuthentication": 0,

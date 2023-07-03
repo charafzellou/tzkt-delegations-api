@@ -1,8 +1,10 @@
-# KILN - Mid Backend Exercice
+# TZKT DELEGATIONS API
 
 ## Original assignement :
 
-In this exercise, you will build a service that gathers new [delegations](https://opentezos.com/baking/delegating/) made on the Tezos protocol and exposes them through a public API.
+Build a service that :
+- gathers new [delegations](https://opentezos.com/baking/delegating/) made on the Tezos protocol,
+- exposes them through a public API. 
 
 The original assignement document can be viewed [here](./docs/ASSIGNEMENT.md).
 
@@ -28,11 +30,9 @@ go build . -o app
 
 ## Checklist :
 
-<!-- - [ ] Mercury -->
-<!-- - [x] Venus -->
-- [ ] The service will poll the new delegations from this Tzkt API endpoint: https://api.tzkt.io/#operation/Operations_GetDelegations
-- [ ] For each delegation, save the following information: sender's address, timestamp, amount, and block.
-- [ ] Expose the collected data through a public API at the endpoint `/xtz/delegations`.
+- [X] The service will poll the new delegations from this Tzkt API endpoint: https://api.tzkt.io/#operation/Operations_GetDelegations
+- [X] For each delegation, save the following information: sender's address, timestamp, amount, and block.
+- [X] Expose the collected data through a public API at the endpoint `/xtz/delegations`.
     - [ ] The expected response format is:
     
         ```json
@@ -54,7 +54,7 @@ go build . -o app
         }
         ```
     
-    - [ ] The sender’s address is the delegator.
-    - [ ] The delegations must be listed most recent first.
-    - [ ] The endpoint takes one optional query parameter `year` , which is specified in the format `YYYY` and will result in the data being filtered for that year only.
+    - [X] The sender’s address is the delegator.
+    - [X] The delegations must be listed most recent first.
+    - [X] The endpoint takes one optional query parameter `year` , which is specified in the format `YYYY` and will result in the data being filtered for that year only.
 - [ ] Ensure the service is production-ready, considering factors like performance, scalability, error handling, and reliability.
