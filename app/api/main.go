@@ -43,10 +43,10 @@ func startApiServer(db *sql.DB) {
 
 	// Bind endpoints to handlers
 	v1.Get("/delegations", func(c *fiber.Ctx) error {
-		// return c.SendString("Hello, World 👋!")
-		// read request body and unmarshal into Request struct
-		// fmt.Printf("c.Body(): %v\n", c.Body())
-		return c.JSON(streamDelegations(db))
+		params := c.Queries()
+		log.Printf("Params: %v\n", params)
+		log.Printf("params[\"year\"]: %v\n", params["year"])
+		return c.JSON(streamDelegations(db, params["year"]))
 	})
 
 	// Setup static files
@@ -63,12 +63,18 @@ func startApiServer(db *sql.DB) {
 	log.Fatal(app.Listen(listenerAddress))
 }
 
-func streamDelegations(db *sql.DB) []DelegationApi {
+func streamDelegations(db *sql.DB, requested_year string) []DelegationApi {
 	// Create a slice of DelegationApi
 	delegations := []DelegationApi{}
 
+	var rows *sql.Rows
+	var err error
 	// Query the database
-	rows, err := db.Query("SELECT * FROM delegations")
+	if requested_year == "" {
+		rows, err = db.Query("SELECT * FROM delegations")
+	} else {
+		rows, err = db.Query("SELECT * FROM delegations WHERE EXTRACT(YEAR FROM timestamp) = $1", requested_year)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -35,7 +35,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/xtz/delegations",
+					"raw": "http://localhost:3000/xtz/delegations?year=2019",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -44,6 +44,12 @@
 					"path": [
 						"xtz",
 						"delegations"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2019"
+						}
 					]
 				}
 			},
