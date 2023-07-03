@@ -80,10 +80,8 @@ func getDelegationsCount() int {
 func getDelegations() []Delegation {
 	var delegations []Delegation
 	// Request delegations from https://api.tzkt.io/v1/operations/delegations
-	// for i := 0; i < getDelegationsCount(); i += 10000 {
-	for i := 0; i < 1; i += 10000 {
-		// url := fmt.Sprintf("https://api.tzkt.io/v1/operations/delegations?limit=10000&offset=%d", i)
-		url := fmt.Sprintf("https://api.tzkt.io/v1/operations/delegations?limit=100&offset=%d", i)
+	for i := 0; i < getDelegationsCount(); i += 10000 {
+		url := fmt.Sprintf("https://api.tzkt.io/v1/operations/delegations?limit=10000&offset=%d", i)
 		log.Printf("[getDelegations]  URL: %s\n", url)
 		response, err := http.Get(url)
 		if err != nil {

@@ -8,7 +8,6 @@ type Request struct {
 
 // Define a DelegationsApi struct
 type DelegationApi struct {
-	// hash, level, timestamp, sender, delegate, amount, status
 	Hash               string    `json:"hash"`
 	Level              int       `json:"level"`
 	Timestamp          time.Time `json:"timestamp"`
