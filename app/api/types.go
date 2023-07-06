@@ -6,15 +6,21 @@ type Request struct {
 	Year int `json:"year,omitempty"`
 }
 
+type Response struct {
+	Data []DelegationApi `json:"data,omitempty"`
+}
+
 // Define a DelegationsApi struct
+//
+//	"timestamp": "2022-05-05T06:29:14Z",
+//	"amount": "125896",
+//	"delegator": "tz1a1SAaXRt9yoGMx29rh9FsBF4UzmvojdTL",
+//	"block": "2338084"
 type DelegationApi struct {
-	Hash               string    `json:"hash"`
-	Level              int       `json:"level"`
-	Timestamp          time.Time `json:"timestamp"`
-	SenderAddress      string    `json:"sender"`
-	NewDelegateAddress string    `json:"newDelegate"`
-	Amount             float64   `json:"amount"`
-	Status             string    `json:"status"`
+	Timestamp time.Time `json:"timestamp"`
+	Amount    float64   `json:"amount"`
+	Delegator string    `json:"delegator"`
+	Block     int       `json:"block"`
 }
 
 // Define a Delegation struct

@@ -33,7 +33,7 @@ go build . -o app
 - [X] The service will poll the new delegations from this Tzkt API endpoint: https://api.tzkt.io/#operation/Operations_GetDelegations
 - [X] For each delegation, save the following information: sender's address, timestamp, amount, and block.
 - [X] Expose the collected data through a public API at the endpoint `/xtz/delegations`.
-    - [ ] The expected response format is:
+    - [X] The expected response format is:
     
         ```json
         {
