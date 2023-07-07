@@ -9,12 +9,11 @@ Build a service that :
 The original assignement document can be viewed [here](./docs/ASSIGNEMENT.md).
 
 ## Usage :
-### Using `Make` :
-Using `Make`, you can execute the following commands :
+### Using `Docker-compose` :
+Using `Docker-compose`, you can execute the following commands :
 
 ```bash
-make install
-make start
+docker-compose up -d
 ```
 
 
@@ -22,10 +21,20 @@ make start
 - Using a local install of Go, you can execute the following commands :
 
 ```bash
-source .env
-cd src
-go build . -o app
-./app
+cp .env.dist .env
+```
+
+- Set up your Environement Variables, then :
+
+```bash
+cd app/indexer
+go build . -o indexer
+./indexer
+```
+```bash
+cd app/api
+go build . -o api
+./api
 ```
 
 ## Checklist :
