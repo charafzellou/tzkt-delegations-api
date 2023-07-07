@@ -46,7 +46,13 @@ func startApiServer(db *sql.DB) {
 		params := c.Queries()
 		log.Printf("Params: %v\n", params)
 		log.Printf("params[\"year\"]: %v\n", params["year"])
-		return c.JSON(streamDelegations(db, params["year"]))
+		error := c.JSON(streamDelegations(db, params["year"]))
+		if error != nil {
+			log.Fatalf("Error: %v\n", error)
+		}
+		var result Response
+		result.Data = streamDelegations(db, params["year"])
+		return c.JSON(result)
 	})
 
 	// Setup static files
@@ -71,9 +77,9 @@ func streamDelegations(db *sql.DB, requested_year string) []DelegationApi {
 	var err error
 	// Query the database
 	if requested_year == "" {
-		rows, err = db.Query("SELECT * FROM delegations")
+		rows, err = db.Query("SELECT timestamp, amount, sender, level FROM delegations")
 	} else {
-		rows, err = db.Query("SELECT * FROM delegations WHERE EXTRACT(YEAR FROM timestamp) = $1", requested_year)
+		rows, err = db.Query("SELECT timestamp, amount, sender, level FROM delegations WHERE EXTRACT(YEAR FROM timestamp) = $1", requested_year)
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -83,7 +89,7 @@ func streamDelegations(db *sql.DB, requested_year string) []DelegationApi {
 	// Iterate over the rows
 	for rows.Next() {
 		var delegation DelegationApi
-		err := rows.Scan(&delegation.Hash, &delegation.Level, &delegation.Timestamp, &delegation.SenderAddress, &delegation.NewDelegateAddress, &delegation.Amount, &delegation.Status)
+		err := rows.Scan(&delegation.Timestamp, &delegation.Amount, &delegation.Delegator, &delegation.Block)
 		if err != nil {
 			log.Fatal(err)
 		}
