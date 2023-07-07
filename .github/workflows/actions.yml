@@ -1,5 +1,5 @@
 # YAML file for Github Actions to use to build the Docker Image
-name: Docker Image
+name: Github Actions Build
 
 on:
   push:
@@ -12,5 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the Docker image
-        run: docker build .
+      - name: Build the Indexer Docker Image
+        run: docker build . -f Dockerfile.indexer -t indexer
+      - name: Build the Api Docker Image
+        run: docker build . -f Dockerfile.api -t api

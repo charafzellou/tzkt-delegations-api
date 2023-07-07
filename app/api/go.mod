@@ -1,4 +1,4 @@
-module tzkt-delegations
+module tzkt-delegations-api
 
 go 1.20
 
