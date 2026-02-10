@@ -2,9 +2,8 @@ FROM --platform=linux/amd64 golang:1.20.5
 
 WORKDIR /app/indexer
 
-RUN go install github.com/cosmtrek/air@latest
-
 COPY app/indexer/go.mod app/indexer/go.sum ./
+
 RUN go mod download
 
 COPY ./app/indexer/ ./
